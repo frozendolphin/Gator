@@ -66,3 +66,16 @@ func handlerRegister(s *state, cmd command) error {
 	
 	return nil
 }
+
+func handlerReset(s *state, cmd command) error {
+	if len(cmd.arguments) >= 1 {
+		return errors.New("too many arguments")
+	}
+
+	err := s.db.DeleteAllUsers(context.Background())
+	if err != nil {
+		return errors.New("failed to delete all users")
+	}
+
+	return nil
+}
