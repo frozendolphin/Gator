@@ -79,3 +79,24 @@ func handlerReset(s *state, cmd command) error {
 
 	return nil
 }
+
+func handlerUsers(s *state, cmd command) error {
+	if len(cmd.arguments) >= 1 {
+		return errors.New("too many arguments")
+	}
+
+	users_list, err := s.db.GetUsers(context.Background())
+	if err != nil {
+		return err
+	}
+
+	for _, user := range users_list {
+		if user == s.the_state.UserName {
+			fmt.Printf("* %v (current)\n", user)
+		} else {
+			fmt.Printf("* %v\n", user)
+		}
+	}
+
+	return nil
+}
