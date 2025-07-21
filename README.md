@@ -9,7 +9,7 @@ Gator is a command-line tool for managing RSS feeds. It provides a simple interf
 - **Go** (version 1.24.4 or newer)
 - **PostgreSQL** (running locally or accessible remotely)
 
----
+
 
 ## Installation
 
