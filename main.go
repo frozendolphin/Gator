@@ -41,6 +41,7 @@ func main() {
 	handler.register("reset", handlerReset)
 	handler.register("users", handlerUsers)
 	handler.register("agg", handlerAgg)
+	handler.register("addfeed", handlerAddfeed)
 
 	if len(os.Args) < 2 {
 		log.Fatal("command name required")
