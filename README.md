@@ -2,7 +2,7 @@
 
 Gator is a command-line tool for managing RSS feeds. It provides a simple interface to register users, add and follow feeds, and browse aggregated posts, all backed by a PostgreSQL database.
 
----
+
 
 ## Requirements
 
@@ -21,7 +21,7 @@ Gator is a command-line tool for managing RSS feeds. It provides a simple interf
    ```
    This will install the `gator` binary to your `$GOPATH/bin` (usually `~/go/bin`). Make sure this directory is in your `PATH`.
 
----
+
 
 ## Database Setup
 
@@ -98,7 +98,7 @@ goose postgres "postgres://postgres:password@localhost:5432/gator?sslmode=disabl
 
 > **Note:** Adjust the connection string as needed for your environment (username, password, host, port).
 
----
+
 
 ## Configuration
 
@@ -114,7 +114,7 @@ Gator uses a config file located at `~/.gatorconfig.json`.
 - `db_url`: Your PostgreSQL connection string.
 - `username`: Your Gator username (set automatically when you use the `register` or `login` command).
 
----
+
 
 ## Usage
 
@@ -139,7 +139,7 @@ If you installed with `go install`, you may need to run it as:
    ```
    This sets your username in the config file.
 
----
+
 
 ## Commands & Features
 
@@ -155,7 +155,7 @@ If you installed with `go install`, you may need to run it as:
 - **unfollow <feed_url>**: Unfollow a feed by its URL.
 - **browse [limit]**: Browse posts from feeds you follow (optionally limit the number shown, default is 2).
 
----
+
 
 ## Example Workflow
 
@@ -189,7 +189,7 @@ If you installed with `go install`, you may need to run it as:
    gator unfollow https://another.com/rss
    ```
 
----
+
 
 ## Development & Contributing
 
@@ -200,7 +200,7 @@ If you installed with `go install`, you may need to run it as:
   ```
 - Database schema is in `sql/schema/`.
 
----
+
 
 ## License
 
