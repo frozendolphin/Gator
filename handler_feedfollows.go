@@ -44,7 +44,7 @@ func handlerFollow(s *state, cmd command, user database.User) error {
 
 func handlerFollowing(s *state, cmd command, user database.User) error {
 
-	if len(cmd.arguments) > 1 {
+	if len(cmd.arguments) >= 1 {
 		return errors.New("too many arguments")
 	}
 
@@ -56,6 +56,35 @@ func handlerFollowing(s *state, cmd command, user database.User) error {
 	for i, feed := range following_feeds {
 		fmt.Printf("%v. %v - %v (%v)\n", i + 1, feed.FeedName, feed.FeedUrl, feed.UserName)
 	}
+
+	return nil
+}
+
+func handlerUnfollow(s *state, cmd command, user database.User) error {
+	
+	if len(cmd.arguments) == 0 {
+		return errors.New("no arguments were given, please enter feed_url")
+	}
+	if len(cmd.arguments) > 1 {
+		return errors.New("too many arguments")
+	}
+
+	feed, err := s.db.GetFeedByUrl(context.Background(), cmd.arguments[0])
+	if err != nil {
+		return err
+	}
+
+	param := database.DeleteFeedFollowParams{
+		UserID: user.ID,
+		FeedID: feed.ID,
+	}
+
+	err = s.db.DeleteFeedFollow(context.Background(), param)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("%v unfollowed by %v", feed.Name, user.Name)
 
 	return nil
 }
