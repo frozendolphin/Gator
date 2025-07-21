@@ -10,18 +10,13 @@ import (
 	"github.com/google/uuid"
 )
 
-func handlerFollow(s *state, cmd command) error {
+func handlerFollow(s *state, cmd command, user database.User) error {
 
 	if len(cmd.arguments) == 0 {
 		return errors.New("no arguments were given, please enter url")
 	}
 	if len(cmd.arguments) > 1 {
 		return errors.New("too many arguments")
-	}
-
-	user, err := s.db.GetUser(context.Background(), s.the_state.UserName)
-	if err != nil {
-		return err
 	}
 
 	feed, err := s.db.GetFeedByUrl(context.Background(), cmd.arguments[0])
@@ -47,15 +42,10 @@ func handlerFollow(s *state, cmd command) error {
 	return nil
 }
 
-func handlerFollowing(s *state, cmd command) error {
+func handlerFollowing(s *state, cmd command, user database.User) error {
 
 	if len(cmd.arguments) > 1 {
 		return errors.New("too many arguments")
-	}
-
-	user, err := s.db.GetUser(context.Background(), s.the_state.UserName)
-	if err != nil {
-		return err
 	}
 
 	following_feeds, err := s.db.GetFeedFollowsForUser(context.Background(), user.ID)
@@ -64,7 +54,7 @@ func handlerFollowing(s *state, cmd command) error {
 	}
 
 	for i, feed := range following_feeds {
-		fmt.Printf("%v. %v - %v (%v)", i + 1, feed.FeedName, feed.FeedUrl, feed.UserName)
+		fmt.Printf("%v. %v - %v (%v)\n", i + 1, feed.FeedName, feed.FeedUrl, feed.UserName)
 	}
 
 	return nil

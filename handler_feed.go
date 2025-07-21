@@ -9,7 +9,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func handlerAddfeed(s *state, cmd command) error {
+func handlerAddfeed(s *state, cmd command, user database.User) error {
 
 	if len(cmd.arguments) == 0 {
 		return errors.New("no arguments were given, please enter feedname and url string")
@@ -19,12 +19,6 @@ func handlerAddfeed(s *state, cmd command) error {
 	}
 	if len(cmd.arguments) > 2 {
 		return errors.New("too many arguments")
-	}
-
-	current_username := s.the_state.UserName
-	user, err := s.db.GetUser(context.Background(), current_username)
-	if err != nil {
-		return err
 	}
 
 	params := database.CreateFeedParams {
@@ -45,7 +39,7 @@ func handlerAddfeed(s *state, cmd command) error {
 		name: "follow",
 		arguments: []string{cmd.arguments[1]},
 	}
-	err = handlerFollow(s, cmd2)
+	err = handlerFollow(s, cmd2, user)
 	if err != nil {
 		return  err
 	}

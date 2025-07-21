@@ -41,10 +41,10 @@ func main() {
 	handler.register("reset", handlerReset)
 	handler.register("users", handlerUsers)
 	handler.register("agg", handlerAgg)
-	handler.register("addfeed", handlerAddfeed)
+	handler.register("addfeed", middlewareLoggedIn(handlerAddfeed))
 	handler.register("feeds", handlerFeeds)
-	handler.register("follow", handlerFollow)
-	handler.register("following", handlerFollowing)
+	handler.register("follow", middlewareLoggedIn(handlerFollow))
+	handler.register("following", middlewareLoggedIn(handlerFollowing))
 
 	if len(os.Args) < 2 {
 		log.Fatal("command name required")
