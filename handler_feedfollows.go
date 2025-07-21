@@ -37,7 +37,7 @@ func handlerFollow(s *state, cmd command, user database.User) error {
 		return err
 	}
 
-	fmt.Printf("feed: %v has been followed by %v", feed_follow.FeedName, feed_follow.UserName)
+	fmt.Printf("feed: %v has been followed by %v\n", feed_follow.FeedName, feed_follow.UserName)
 
 	return nil
 }

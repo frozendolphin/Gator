@@ -2,23 +2,70 @@ package main
 
 import (
 	"context"
-	"encoding/json"
-	"fmt"
+	"database/sql"
 	"errors"
+	"fmt"
+	"time"
+
+	"github.com/frozendolphin/Gator/internal/database"
 )
 
 func handlerAgg(s *state, cmd command) error {
-	feed, err := fetchFeed(context.Background(), "https://www.wagslane.dev/index.xml")
-	if err != nil {
-		return fmt.Errorf("err: %v", err)
+
+	if len(cmd.arguments) == 0 {
+		return errors.New("no arguments were given, please enter the duration")
+	}
+	if len(cmd.arguments) > 1 {
+		return errors.New("too many arguments")
 	}
 
-	jsonData, err := json.MarshalIndent(feed, "", "  ")
+	time_between_reqs, err := time.ParseDuration(cmd.arguments[0])
 	if err != nil {
-		return errors.New("marshal indent failed")
+		return errors.New("time duration parsing failed")
 	}
-	fmt.Println(string(jsonData))
+
+	fmt.Printf("Collecting feeds every %v\n\n", cmd.arguments[0])
+
+	ticker := time.NewTicker(time_between_reqs)
+	for ; ; <-ticker.C {
+		ScrapeFeeds(s)
+	}
 
 	return nil
 }
 
+func ScrapeFeeds(s *state) error {
+
+	next_feed, err := s.db.GetNextFeedToFetch(context.Background())
+	if err != nil {
+		return err
+	}
+
+	params := database.MarkFeedFetchedParams {
+		LastFetchedAt: sql.NullTime{
+			Time: time.Now(),
+			Valid: true,
+		},
+		ID: next_feed.ID,
+	}
+
+	err = s.db.MarkFeedFetched(context.Background(), params)
+	if err != nil {
+		return err
+	}
+
+	rssfeed, err := fetchFeed(context.Background(), next_feed.Url)
+	if err != nil {
+		return fmt.Errorf("err: %v", err)
+	}
+
+	fmt.Printf("%v:\n", rssfeed.Channel.Title)
+
+	for i, item := range rssfeed.Channel.Item {
+		fmt.Printf("%v. %v\n", i + 1, item.Title)
+	}
+
+	fmt.Printf("\n\n")
+
+	return nil
+}
