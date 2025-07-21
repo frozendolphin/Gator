@@ -46,6 +46,7 @@ func main() {
 	handler.register("follow", middlewareLoggedIn(handlerFollow))
 	handler.register("following", middlewareLoggedIn(handlerFollowing))
 	handler.register("unfollow", middlewareLoggedIn(handlerUnfollow))
+	handler.register("browse", middlewareLoggedIn(handlerBrowse))
 
 	if len(os.Args) < 2 {
 		log.Fatal("command name required")
