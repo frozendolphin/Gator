@@ -41,3 +41,21 @@ func handlerAddfeed(s *state, cmd command) error {
 
 	return nil
 }
+
+func handlerFeeds(s *state, cmd command) error{
+
+	if len(cmd.arguments) > 0 {
+		return errors.New("too many arguments")
+	}
+
+	feeds, err := s.db.GetFeeds(context.Background())
+	if err != nil {
+		return err
+	}
+
+	for i, feed := range feeds {
+		fmt.Printf("%v. %v - %v (%v)\n", i + 1, feed.Name, feed.Url, feed.Name_2)
+	} 
+
+	return nil
+}
