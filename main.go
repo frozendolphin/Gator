@@ -43,6 +43,8 @@ func main() {
 	handler.register("agg", handlerAgg)
 	handler.register("addfeed", handlerAddfeed)
 	handler.register("feeds", handlerFeeds)
+	handler.register("follow", handlerFollow)
+	handler.register("following", handlerFollowing)
 
 	if len(os.Args) < 2 {
 		log.Fatal("command name required")
@@ -55,6 +57,6 @@ func main() {
 
 	err = handler.run(&cfg_state, cmd)
 	if err != nil {
-		log.Fatalf("error occured in running command : %v", err)
+		log.Fatalf("error occured in running command : %v\n", err)
 	}
 }

@@ -1,0 +1,71 @@
+package main
+
+import (
+	"context"
+	"errors"
+	"fmt"
+	"time"
+
+	"github.com/frozendolphin/Gator/internal/database"
+	"github.com/google/uuid"
+)
+
+func handlerFollow(s *state, cmd command) error {
+
+	if len(cmd.arguments) == 0 {
+		return errors.New("no arguments were given, please enter url")
+	}
+	if len(cmd.arguments) > 1 {
+		return errors.New("too many arguments")
+	}
+
+	user, err := s.db.GetUser(context.Background(), s.the_state.UserName)
+	if err != nil {
+		return err
+	}
+
+	feed, err := s.db.GetFeedByUrl(context.Background(), cmd.arguments[0])
+	if err != nil {
+		return err
+	}
+
+	params := database.CreateFeedFollowParams {
+		ID: uuid.New(),
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+		UserID: user.ID,
+		FeedID: feed.ID,
+	}
+
+	feed_follow, err := s.db.CreateFeedFollow(context.Background(), params)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("feed: %v has been followed by %v", feed_follow.FeedName, feed_follow.UserName)
+
+	return nil
+}
+
+func handlerFollowing(s *state, cmd command) error {
+
+	if len(cmd.arguments) > 1 {
+		return errors.New("too many arguments")
+	}
+
+	user, err := s.db.GetUser(context.Background(), s.the_state.UserName)
+	if err != nil {
+		return err
+	}
+
+	following_feeds, err := s.db.GetFeedFollowsForUser(context.Background(), user.ID)
+	if err != nil {
+		return err
+	}
+
+	for i, feed := range following_feeds {
+		fmt.Printf("%v. %v - %v (%v)", i + 1, feed.FeedName, feed.FeedUrl, feed.UserName)
+	}
+
+	return nil
+}

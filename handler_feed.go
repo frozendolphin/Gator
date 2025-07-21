@@ -6,6 +6,7 @@ import (
 	"errors"
 
 	"github.com/frozendolphin/Gator/internal/database"
+	"github.com/google/uuid"
 )
 
 func handlerAddfeed(s *state, cmd command) error {
@@ -27,6 +28,7 @@ func handlerAddfeed(s *state, cmd command) error {
 	}
 
 	params := database.CreateFeedParams {
+		ID: uuid.New(),
 		Name: cmd.arguments[0],
 		Url: cmd.arguments[1],
 		UserID: user.ID,
@@ -38,6 +40,15 @@ func handlerAddfeed(s *state, cmd command) error {
 	}
 
 	fmt.Printf("Feed: %+v\n", feed)
+
+	cmd2 := command {
+		name: "follow",
+		arguments: []string{cmd.arguments[1]},
+	}
+	err = handlerFollow(s, cmd2)
+	if err != nil {
+		return  err
+	}
 
 	return nil
 }
@@ -54,7 +65,7 @@ func handlerFeeds(s *state, cmd command) error{
 	}
 
 	for i, feed := range feeds {
-		fmt.Printf("%v. %v - %v (%v)\n", i + 1, feed.Name, feed.Url, feed.Name_2)
+		fmt.Printf("%v. %v - %v (%v)\n", i + 1, feed.FeedName, feed.FeedUrl, feed.UserName)
 	} 
 
 	return nil
