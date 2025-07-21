@@ -40,6 +40,7 @@ func main() {
 	handler.register("register", handlerRegister)
 	handler.register("reset", handlerReset)
 	handler.register("users", handlerUsers)
+	handler.register("agg", handlerAgg)
 
 	if len(os.Args) < 2 {
 		log.Fatal("command name required")

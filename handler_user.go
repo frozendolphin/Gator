@@ -100,3 +100,4 @@ func handlerUsers(s *state, cmd command) error {
 
 	return nil
 }
+
